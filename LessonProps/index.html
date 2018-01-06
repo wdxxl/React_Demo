@@ -73,7 +73,7 @@
      * props提供的语法糖，可以将父组件中的全部属性复制给子组件
      * 需求：定义一个组件link，link中只包含<a>，不给a标签设置任何组件，所有属性全部从父组件复制得到
      */
-
+     /*
      var Link = React.createClass({
        render : function(){
          return <a {...this.props}>{this.props.name}</a>;
@@ -84,5 +84,45 @@
        <Link href="http://baidu.com" name="wdxxl" id="1"/>,
        document.getElementById("container")
      );
+     */
+
+     /**
+      * this.props.children
+      *
+      * children 是一个例外，不是跟组件的属性对应
+      * 表示组件的所有子节点
+      * HTML5 中有一种标签： 列表 <ul> <ol> <li>
+      * 需求： 定义一个组件列表，列表中显示的内容，以及列表项的数量都由外部决定
+      */
+
+      var ListComponent = React.createClass({
+        render: function(){
+          return (
+            <ul>
+              {
+                /* 列表项的数量以及内容不确定，在创建模版时才能确定，
+                利用this.props.children 从父组件获取需要展示的列表内容
+                获取到列表项内容后，需要遍历children，逐项进行处理
+                使用React.Children.map方法
+                返回值：数组对象。这里数组中的元素是 <li> */
+                React.Children.map(this.props.children, function(child){
+                   // child是遍历得到的父组件的子节点
+                   return <li>{child}</li>
+                })
+              }
+            </ul>
+          );
+        }
+      });
+
+      ReactDOM.render(
+        (
+          <ListComponent>
+            <h1>wdxxl this.props.children</h1>
+            <a href="http://www.baidu.com">weblink baidu</a>
+          </ListComponent>
+        ),
+        document.getElementById("container")
+      );
   </script>
 </html>
